@@ -3,6 +3,7 @@ import { writeFileSync, readFileSync } from 'fs'
 import { ServerResponse, IncomingMessage } from 'http';
 import { Config } from '.';
 
+const fnv1a = require('@sindresorhus/fnv1a');
 const filenamifyUrl = require('filenamify-url')
 
 export interface CacheConfig {
@@ -15,28 +16,33 @@ export function set(
   userRes: ServerResponse,
   config: Config) {
     const url = userReq.url
-  const path = join(config.folder, filenamifyUrl(url))
+    if(!url){
+      return 
+    }
+  const path = getPathForUrl(config, url)
   config.debug&&console.log('Caching '+url+' in '+path);
   writeFileSync(path, proxyResData)
-  writeFileSync(getHeadersPathForUrl(path), JSON.stringify(proxyRes.headers))
+  writeFileSync(getHeadersPathForUrl(config, url), JSON.stringify(proxyRes.headers))
 }
-function getHeadersPathForUrl(path: string) {
-  return path + '__headers__';
+function getHeadersPathForUrl(config: CacheConfig, url: string) {
+  const path = fnv1a(url)+'-headers-'+filenamifyUrl(url)
+  return join(config.folder, path)
 }
 
 export function get(url: string, config: CacheConfig): Data|undefined {
-  const path = getPathForUrl(config, url)
   try {
     return {
-      data: readFileSync(path), 
-      headers: JSON.parse(readFileSync(getHeadersPathForUrl(path)).toString())
+      data: readFileSync(getPathForUrl(config, url)), 
+      headers: JSON.parse(readFileSync(getHeadersPathForUrl(config, url)).toString())
     }
   } catch (error) {
     return undefined
   }
 }
+
 function getPathForUrl(config: CacheConfig, url: string) {
-  return join(config.folder, filenamifyUrl(url))
+  const path = fnv1a(url)+'-'+filenamifyUrl(url)
+  return join(config.folder, path)
 }
 
 interface Data{

@@ -21,12 +21,12 @@ function enableCors(userReq: IncomingMessage, userRes: ServerResponse, config: C
       //   console.log(typeof val, h, val);
         
       // }
-      if(Array.isArray(val)){
+      // if(Array.isArray(val)){
         // val.forEach(hh=>{
-          config.debug && console.log('setHeader array ', val, val.length)
+          // config.debug && console.log('setHeader array ', val, val.length)
           // userRes.setHeader(h, hh)
         // })
-      }
+      // }
       // else {
 
         config.debug && console.log('setHeader', h, val)
@@ -59,24 +59,24 @@ export function main(config: Config) {
                 enableCors(req, res, config, cached.headers) 
                 res.end(cached.data)
               }
-              else {
-                // if (userReq.method === 'OPTIONS') {
-                  enableCors(req, res, config, {}) 
+              // else {
+              //   // if (userReq.method === 'OPTIONS') {
+              //     enableCors(req, res, config, {}) 
                   
-                  // res.writeHead(200)
-                  res.end()
-                  doProxy=true
-                  // }
-                }
+              //     // res.writeHead(200)
+              //     res.end()
+              //     doProxy=true
+              //     // }
+              //   }
                 // return false
                 // result=false
               }
               else {
 
-        if(req.method === 'OPTIONS'){
-          enableCors(req, res, config, {}) 
-          req.method='GET'
-        }
+                if(req.method === 'OPTIONS'){
+                  enableCors(req, res, config, {}) 
+                  req.method='GET'
+                }
                 doProxy=true
               }
           } catch (error) {

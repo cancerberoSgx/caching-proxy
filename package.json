@@ -8,6 +8,7 @@
     "prepare": "npm run build"
   },
   "dependencies": {
+    "@sindresorhus/fnv1a": "^1.0.0",
     "express": "^4.16.4",
     "express-http-proxy": "^1.5.1",
     "filenamify-url": "^1.0.0",
