@@ -1,6 +1,7 @@
 import { join } from 'path'
 import { writeFileSync, readFileSync } from 'fs'
 import { ServerResponse, IncomingMessage } from 'http';
+import { Config } from '.';
 
 const filenamifyUrl = require('filenamify-url')
 
@@ -12,17 +13,12 @@ export function set(
   proxyResData: Buffer,
   userReq: IncomingMessage,
   userRes: ServerResponse,
-  config: CacheConfig) {
+  config: Config) {
     const url = userReq.url
   const path = join(config.folder, filenamifyUrl(url))
-  console.log('Caching '+url+' in '+path);
+  config.debug&&console.log('Caching '+url+' in '+path);
   writeFileSync(path, proxyResData)
-  // console.log(proxyRes);
-  
-  // console.log('(userRes.getHeaders()', (userRes.getHeaders()))
-  
-  // console.log('(userReq.headers', (userReq.headers));
-  writeFileSync(getHeadersPathForUrl(path), JSON.stringify({}))
+  writeFileSync(getHeadersPathForUrl(path), JSON.stringify(proxyRes.headers))
 }
 function getHeadersPathForUrl(path: string) {
   return path + '__headers__';
@@ -40,7 +36,7 @@ export function get(url: string, config: CacheConfig): Data|undefined {
   }
 }
 function getPathForUrl(config: CacheConfig, url: string) {
-  return join(config.folder, filenamifyUrl(url));
+  return join(config.folder, filenamifyUrl(url))
 }
 
 interface Data{

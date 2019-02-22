@@ -28,7 +28,7 @@ function helpAndExit(code = 0) {
   console.log(`Usage examples: 
 caching-proxy --hostName "www.google.com"
 
-Optional arguments: --port --folder
+Optional arguments: --port --folder --debug
 `)
 
   process.exit(code)
