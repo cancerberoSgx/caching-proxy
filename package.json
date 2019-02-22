@@ -1,0 +1,20 @@
+{
+  "name": "caching-proxy",
+  "version": "0.1.0",
+  "private": false,
+  "bin": "bin/caching-proxy.js",
+  "scripts": {
+    "build": "npx tsc",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "express": "^4.16.4",
+    "express-http-proxy": "^1.5.1",
+    "filenamify-url": "^1.0.0",
+    "yargs-parser": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^11.9.4",
+    "typescript": "^3.3.3"
+  }
+}
